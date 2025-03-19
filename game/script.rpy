@@ -1,4 +1,7 @@
-﻿# Вы можете расположить сценарий своей игры в этом файле.
+﻿init python:
+    from my_python_api.main import main as main_api
+
+# Вы можете расположить сценарий своей игры в этом файле.
 
 # Определение персонажей игры.
 define e = Character('Эйлин', color="#c8ffc8")
@@ -10,12 +13,16 @@ define e = Character('Эйлин', color="#c8ffc8")
 
 # Игра начинается здесь:
 label start:
+    python:
+        random_int = main_api()
 
     scene bg room
 
     show eileen happy
 
     e "Вы создали новую игру Ren'Py."
+
+    e "Результат работы функции main_api: [random_int]."  # Используем [random_int] для вставки значения
 
     e "Добавьте сюжет, изображения и музыку и отправьте её в мир!"
 
