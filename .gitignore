@@ -1,0 +1,11 @@
+
+
+
+
+# Сохранения
+game/saves
+
+# Разработка
+errors.txt
+traceback.txt
+log.txt

@@ -28,9 +28,24 @@
 #
 #     return
 
-
+image bg out1 = Transform("out.png", fit="contain")
 
 init python:
+    import os  # Модуль для взаимодействия с операционной системой, установка не требуется.
+
+    from PIL import Image as PILImage  # Переименовываем PIL.Image
+    from PIL import ImageDraw
+
+    # Путь к файлу через config.basedir
+    # По умолчанию путь идет в корень RenPy, а не проекта.
+    game_path = os.path.join(config.basedir, "game")
+
+    def create_custom_image():
+        img = PILImage.new('RGBA', (800, 600), (255, 255, 255, 0))
+        draw = ImageDraw.Draw(img)
+        draw.rectangle([100, 100, 300, 300], fill="blue")
+        img.save(f"{game_path}/new_images/custom_image.png")  # Сохраняем изображение в папку game
+
     # Инициализация переменных
     status_game = {
         "day": 1
@@ -79,10 +94,16 @@ init python:
         status_game['day'] += 1
         gather_resources()
 
+    # Создаем изображение при запуске игры
+    create_custom_image()
+
+# Загружаем изображение в Ren'Py
+image custom_bg = "new_images/custom_image.png"
 
 # Начало игры
 label start:
-    scene out
+    scene bg out1
+    show custom_bg  # Показываем изображение, созданное с помощью PIL
     show screen status_display
     show screen resource_display
     show screen buildings_display
@@ -90,7 +111,8 @@ label start:
     jump main_menu
 
 label main_menu:
-    scene out
+    show custom_bg  # Показываем изображение, созданное с помощью PIL
+    scene bg out1
     show screen status_display
     show screen resource_display
     show screen buildings_display
