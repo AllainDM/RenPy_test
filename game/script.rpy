@@ -36,9 +36,13 @@ init python:
     from PIL import Image as PILImage  # Переименовываем PIL.Image
     from PIL import ImageDraw
 
+    import my_python_api.api_client as api_client
+#     from my_python_api.api_client import api_client
+
     # Путь к файлу через config.basedir
     # По умолчанию путь идет в корень RenPy, а не проекта.
     game_path = os.path.join(config.basedir, "game")
+
 
     def create_custom_image():
         img = PILImage.new('RGBA', (800, 600), (255, 255, 255, 0))
@@ -102,35 +106,51 @@ image custom_bg = "new_images/custom_image.png"
 
 # Начало игры
 label start:
+
+    "Начинаем игру..."
+
+    # Пример получения данных с сервера
+    python:
+        data = api_client.api_client.get("req_status_game")
+#         print(data)
+        game_id = data["game"]["row_id"]
+        if data:
+            renpy.say("Герой", "Данные с сервера: data}")
+            renpy.say("Герой", f"Данные с сервера: {game_id}")
+        else:
+            renpy.say("Герой", "Не удалось получить данные с сервера.")
+
+    "Продолжаем игру..."
+
     scene bg out1
     show custom_bg  # Показываем изображение, созданное с помощью PIL
     show screen status_display
     show screen resource_display
     show screen buildings_display
     "Добро пожаловать в ваше поселение!"
-    jump main_menu
+#     jump main_menu
 
-label main_menu:
-    show custom_bg  # Показываем изображение, созданное с помощью PIL
-    scene bg out1
-    show screen status_display
-    show screen resource_display
-    show screen buildings_display
-    "Вы можете собирать ресурсы и строить здания."
-    # Меню выбора действий
-    menu:
-        "Что вы хотите сделать?"
-        "Собрать ресурсы":
-            $ gather_resources()
-            "Вы собрали немного ресурсов."
-        "Построить здание":
-            "Вы построили здание."
-#             call screen build_menu
-#             jump main_menu
-        "Закончить день":
-            "Вы решили закончить день."
-            $ end_day()
-            return
+# label main_menu:
+#     show custom_bg  # Показываем изображение, созданное с помощью PIL
+#     scene bg out1
+#     show screen status_display
+#     show screen resource_display
+#     show screen buildings_display
+#     "Вы можете собирать ресурсы и строить здания."
+#     # Меню выбора действий
+#     menu:
+#         "Что вы хотите сделать?"
+#         "Собрать ресурсы":
+#             $ gather_resources()
+#             "Вы собрали немного ресурсов."
+#         "Построить здание":
+#             "Вы построили здание."
+# #             call screen build_menu
+# #             jump main_menu
+#         "Закончить день":
+#             "Вы решили закончить день."
+#             $ end_day()
+#             return
 
 
 # label main_menu:

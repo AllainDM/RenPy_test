@@ -1,6 +1,7 @@
 
 
-
+# Конфиг
+game/my_python_api/config.py
 
 # Сохранения
 game/saves
