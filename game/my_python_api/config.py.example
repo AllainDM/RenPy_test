@@ -1,0 +1,4 @@
+login = "login"
+psw = "password"
+
+url_main = "http://127.0.0.1:8000"
