@@ -1,5 +1,6 @@
 # IDE
 game/my_python_api/__pycache__
+.idea
 
 # Конфиг
 game/my_python_api/config.py

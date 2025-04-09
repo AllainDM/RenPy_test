@@ -1,4 +1,8 @@
-﻿# init python:
+﻿#####################################################################
+# Базовый код стартового сценария
+#####################################################################
+
+# init python:
 #     from my_python_api.main import main as main_api
 #
 # # Вы можете расположить сценарий своей игры в этом файле.
@@ -27,24 +31,33 @@
 #     e "Добавьте сюжет, изображения и музыку и отправьте её в мир!"
 #
 #     return
+#####################################################################
+#####################################################################
 
+# Подгонка изображения под размер экрана
 image bg out1 = Transform("out.png", fit="contain")
+
+
+#####################################################################
+# Python
+#####################################################################
 
 init python:
     import os  # Модуль для взаимодействия с операционной системой, установка не требуется.
 
-    from PIL import Image as PILImage  # Переименовываем PIL.Image
+    from PIL import Image as PILImage  # Переименовываем PILImage, из-за конфликта имен.
     from PIL import ImageDraw
 
     import my_python_api.api_client as api_client
-#     from my_python_api.api_client import api_client
+    # from my_python_api.api_client import api_client
 
     # Путь к файлу через config.basedir
-    # По умолчанию путь идет в корень RenPy, а не проекта.
+    # По умолчанию путь идет в корень движка RenPy, а не проекта.
     game_path = os.path.join(config.basedir, "game")
 
 
     def create_custom_image():
+        # Тестирую отрисовку и сохранения нового изображения.
         img = PILImage.new('RGBA', (800, 600), (255, 255, 255, 0))
         draw = ImageDraw.Draw(img)
         draw.rectangle([100, 100, 300, 300], fill="blue")
@@ -101,21 +114,29 @@ init python:
     # Создаем изображение при запуске игры
     create_custom_image()
 
+#####################################################################
+#####################################################################
+
+
+#####################################################################
+# RenPy основной код
+#####################################################################
+
 # Загружаем изображение в Ren'Py
 image custom_bg = "new_images/custom_image.png"
 
 # Начало игры
 label start:
-
+#
     "Начинаем игру..."
 
     # Пример получения данных с сервера
     python:
         data = api_client.api_client.get("req_status_game")
-#         print(data)
+        print(f"data {data}")
         game_id = data["game"]["row_id"]
         if data:
-            renpy.say("Герой", "Данные с сервера: data}")
+            # renpy.say("Герой", "Данные с сервера: {data}")
             renpy.say("Герой", f"Данные с сервера: {game_id}")
         else:
             renpy.say("Герой", "Не удалось получить данные с сервера.")
@@ -128,7 +149,16 @@ label start:
     show screen resource_display
     show screen buildings_display
     "Добро пожаловать в ваше поселение!"
-#     jump main_menu
+    jump main_menu
+
+    jump test_new_screen
+
+label test_new_screen:
+# label start:
+    show screen test_example_screen with fade
+#     show screen test_example_screen with dissolve
+    "Тест нового экрана"
+    pause
 
 # label main_menu:
 #     show custom_bg  # Показываем изображение, созданное с помощью PIL
@@ -171,6 +201,19 @@ label start:
 #             "Вы решили закончить день."
 #             return
 #
+#####################################################################
+#####################################################################
+
+
+#####################################################################
+# Экраны для отображения различных параметров
+#####################################################################
+# Экран для отображения статуса игры
+# Экран для отображения ресурсов
+# Экран для отображения построек
+# Экран для строительства зданий
+#
+#####################################################################
 
 # Экран для отображения статуса игры
 screen status_display():
@@ -212,4 +255,16 @@ screen buildings_display():
 #             textbutton "Лесопилка (10 дерева, 5 камня)" action [Function(build, "sawmill"), Return()]
 #             textbutton "Каменоломня (15 дерева, 10 камня)" action [Function(build, "quarry"), Return()]
 #             textbutton "Ферма (20 дерева, 15 камня)" action [Function(build, "farm"), Return()]
+
+#####################################################################
+#####################################################################
+
+screen test_example_screen():
+#     add "out"
+    add "bg out1"
+#     text "Пример простого экрана"
+    text _("Пример простого экрана")
+    text _("Пример простого экрана////.......")
+    textbutton _("Список построек"):  # Текстовая кнопка
+        action Hide('test_example_screen')
 
